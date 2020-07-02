@@ -599,7 +599,7 @@ const InitializationPerformance EurocDataProvider::getInitializationPerformance(
   // Assumes gravity vector is downwards
 
   // Loop through bundle adjustment poses and get GT
-  for (int i = 1; i < timestamps.size(); i++) {
+  for (size_t i = 1; i < timestamps.size(); i++) {
     double relativeRotError = -1;
     double relativeTranError = -1;
     // Fill relative poses from GT

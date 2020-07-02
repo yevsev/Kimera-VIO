@@ -41,7 +41,7 @@ void SubPixelCornerFinderParams::print() const {
 
 bool SubPixelCornerFinderParams::parseYAML(const std::string& filepath) {
   YamlParser yaml_parser(filepath);
-  term_criteria_.type = CV_TERMCRIT_EPS + CV_TERMCRIT_ITER;
+  term_criteria_.type = cv::TermCriteria::EPS + cv::TermCriteria::MAX_ITER;
   yaml_parser.getYamlParam("max_iters", &term_criteria_.maxCount);
   yaml_parser.getYamlParam("epsilon_error", &term_criteria_.epsilon);
   int window_size = 0;
@@ -164,7 +164,13 @@ bool FeatureDetectorParams::parseYAML(const std::string& filepath) {
     }
   }
 
-  yaml_parser.getYamlParam("maxFeaturesPerFrame", &max_features_per_frame_);
+  // OpenCV cannot read size_t
+    {
+        int max_features_per_frame;
+        yaml_parser.getYamlParam("maxFeaturesPerFrame", &max_features_per_frame);
+        CHECK(max_features_per_frame > -1);
+        max_features_per_frame_ = static_cast<size_t>(max_features_per_frame);
+    }
 
   // GFTT specific parameters
   yaml_parser.getYamlParam("quality_level", &quality_level_);
@@ -176,6 +182,8 @@ bool FeatureDetectorParams::parseYAML(const std::string& filepath) {
 
   // FAST specific params
   yaml_parser.getYamlParam("fast_thresh", &fast_thresh_);
+
+  return true;
 }
 
 bool FeatureDetectorParams::equals(const FeatureDetectorParams& tp2,

@@ -26,7 +26,7 @@ KittiDataProvider::KittiData::operator bool() const {
                     right_img_names_.empty();
   LOG_IF(ERROR, empty_data) << "Kitti Data is empty!";
   bool missing_data =
-      timestamps_.size() == left_img_names_.size() == right_img_names_.size();
+          (timestamps_.size() == left_img_names_.size()) && (timestamps_.size() == right_img_names_.size());
   LOG_IF(ERROR, missing_data) << "Missing Kitti Data!";
   LOG_IF(ERROR, empty_data || missing_data)
       << "# of timestamps: " << timestamps_.size() << '\n'
@@ -43,7 +43,7 @@ KittiDataProvider::KittiDataProvider()
 }
 
 cv::Mat KittiDataProvider::readKittiImage(const std::string& img_name) {
-  cv::Mat img = cv::imread(img_name, CV_LOAD_IMAGE_UNCHANGED);
+  cv::Mat img = cv::imread(img_name, cv::IMREAD_UNCHANGED);
   LOG_IF(FATAL, img.empty()) << "Failed to load image: " << img_name;
   // cv::imshow("check", img);
   // cv::waitKey(0);
@@ -205,6 +205,7 @@ bool Earlier_time_imu(std::pair<Timestamp, int>& a,
 
 bool KittiDataProvider::parseImuData(const std::string& input_dataset_path,
                                      KittiData* kitti_data) {
+    return true;
 }
 
 /* -------------------------------------------------------------------------- */

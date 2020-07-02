@@ -29,7 +29,7 @@
 #include "kimera-vio/factors/PointPlaneFactor.h"
 #include "kimera-vio/utils/UtilsNumerical.h"
 
-DEFINE_int32(min_num_of_observations,
+DEFINE_uint32(min_num_of_observations,
              2,
              "Minimum number of observations for a feature track to be added "
              "in the optimization problem (corresponds to number of "
@@ -39,7 +39,7 @@ DEFINE_double(max_parallax,
               150,
               "Maximum parallax to be considered correct. This is a patch to "
               "remove outliers when using mono and stereo projection factors.");
-DEFINE_int32(min_num_obs_for_proj_factor,
+DEFINE_uint32(min_num_obs_for_proj_factor,
              4,
              "If the smart factor has less than x number of observations, "
              "then do not consider the landmark as valid to transform to proj."
@@ -51,7 +51,7 @@ DEFINE_int32(min_num_obs_for_proj_factor,
              "reached the mesher and have been clustered will have the "
              "possibility of being here, so this param must be higher than the "
              "min_age one to have any impact.");
-DEFINE_int32(min_num_of_plane_constraints_to_add_factors,
+DEFINE_uint32(min_num_of_plane_constraints_to_add_factors,
              20,
              "Minimum number of plane constraints to ");
 
@@ -63,7 +63,7 @@ DEFINE_bool(remove_old_reg_factors,
             true,
             "Remove regularity factors for those landmarks that were "
             "originally associated to the plane, but which are not anymore.");
-DEFINE_int32(min_num_of_plane_constraints_to_remove_factors,
+DEFINE_uint32(min_num_of_plane_constraints_to_remove_factors,
              10,
              "Number of constraints for a plane to be considered "
              "underconstrained when trying to remove old regularity factors. "
@@ -79,7 +79,7 @@ DEFINE_bool(use_unstable_plane_removal,
             "faults if we do so. The stable implementation instead puts a "
             "prior on the plane and removes as many factors from the plane as "
             "possible to avoid seg fault.");
-DEFINE_int32(min_num_of_plane_constraints_to_avoid_seg_fault,
+DEFINE_uint32(min_num_of_plane_constraints_to_avoid_seg_fault,
              3,
              "Minimum number of constraints from landmark to plane to keep in "
              "order to avoid seg fault when removing factors for a specific "
@@ -104,13 +104,13 @@ RegularVioBackEnd::RegularVioBackEnd(
     const ImuParams& imu_params,
     const BackendOutputParams& backend_output_params,
     const bool& log_output)
-    : regular_vio_params_(RegularVioBackEndParams::safeCast(backend_params)),
-      VioBackEnd(B_Pose_leftCam,
+    : VioBackEnd(B_Pose_leftCam,
                  stereo_calibration,
                  backend_params,
                  imu_params,
                  backend_output_params,
-                 log_output) {
+                 log_output),
+      regular_vio_params_(RegularVioBackEndParams::safeCast(backend_params)) {
   LOG(INFO) << "Using Regular VIO backend.\n";
 
   // Set type of mono_noise_ for generic projection factors.
@@ -1380,7 +1380,7 @@ void RegularVioBackEnd::removeOldRegularityFactors_Slow(
     /// delete_slots otherwise delete ALL constraints, both old and new, so that
     /// the plane disappears (take into account priors!). Priors affecting
     /// planes: linear container factor & prior on OrientedPlane3
-    const int32_t total_nr_of_plane_constraints =
+    const uint32_t total_nr_of_plane_constraints =
         point_plane_factor_slots_good.size() +
         idx_of_point_plane_factors_to_add.size();
     VLOG(10) << "Total number of constraints of plane "

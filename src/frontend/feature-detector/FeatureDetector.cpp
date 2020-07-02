@@ -42,7 +42,7 @@ FeatureDetector::FeatureDetector(
           10;  // Very small bcs we don't use descriptors (yet).
       static constexpr int first_level = 0;
       static constexpr int WTA_K = 0;  // We don't use descriptors (yet).
-      static constexpr int score_type = cv::ORB::HARRIS_SCORE;
+      static constexpr cv::ORB::ScoreType score_type = cv::ORB::HARRIS_SCORE;
       static constexpr int patch_size = 0;  // We don't use descriptors (yet).
       feature_detector_ =
           cv::ORB::create(feature_detector_params_.max_features_per_frame_,
@@ -87,7 +87,7 @@ void FeatureDetector::featureDetection(Frame* cur_frame) {
   // Check how many new features we need: maxFeaturesPerFrame_ - n_existing
   // features If ref_frame has zero features this simply detects
   // maxFeaturesPerFrame_ new features for cur_frame
-  int n_existing = 0;  // count existing (tracked) features
+  size_t n_existing = 0;  // count existing (tracked) features
   for (size_t i = 0u; i < cur_frame->landmarks_.size(); ++i) {
     // count nr of valid keypoints
     if (cur_frame->landmarks_[i] != -1) ++n_existing;
@@ -97,7 +97,7 @@ void FeatureDetector::featureDetection(Frame* cur_frame) {
 
   // Detect new features in image.
   // detect this much new corners if possible
-  int nr_corners_needed = std::max(
+  int nr_corners_needed = std::max<size_t>(
       feature_detector_params_.max_features_per_frame_ - n_existing, 0);
   // debug_info_.need_n_corners_ = nr_corners_needed;
 
@@ -148,7 +148,7 @@ void FeatureDetector::featureDetection(Frame* cur_frame) {
 }
 
 KeypointsCV FeatureDetector::featureDetection(const Frame& cur_frame,
-                                              const int& need_n_corners) {
+                                              const size_t& need_n_corners) {
   // TODO(TONI) need to do grid based approach!
 
   // cv::namedWindow("Input Image", cv::WINDOW_AUTOSIZE);

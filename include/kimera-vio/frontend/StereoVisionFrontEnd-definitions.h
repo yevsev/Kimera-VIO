@@ -61,8 +61,8 @@ struct FrontendOutput : public PipelinePayload {
   const gtsam::Pose3 relative_pose_body_stereo_;
   const StereoFrame stereo_frame_lkf_;
   const ImuFrontEnd::PimPtr pim_;
-  const DebugTrackerInfo debug_tracker_info_;
   const cv::Mat feature_tracks_;
+  const DebugTrackerInfo debug_tracker_info_;
 
   inline DebugTrackerInfo getTrackerInfo() const { return debug_tracker_info_; }
 };

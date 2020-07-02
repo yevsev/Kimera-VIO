@@ -97,30 +97,34 @@ namespace VIO {
 Pipeline::Pipeline(const VioParams& params,
                    Visualizer3D::UniquePtr&& visualizer,
                    DisplayBase::UniquePtr&& displayer)
-    : backend_type_(static_cast<BackendType>(params.backend_type_)),
+    : backend_params_(params.backend_params_),
+      frontend_params_(params.frontend_params_),
+      imu_params_(params.imu_params_),
+      backend_type_(static_cast<BackendType>(params.backend_type_)),
+      parallel_run_(params.parallel_run_),
+      init_frame_id_(),
       stereo_camera_(nullptr),
       data_provider_module_(nullptr),
       vio_frontend_module_(nullptr),
+      stereo_frontend_input_queue_("stereo_frontend_input_queue"),
+      initialization_frontend_output_queue_("initialization_frontend_output_queue", false),
       vio_backend_module_(nullptr),
-      lcd_module_(nullptr),
-      backend_params_(params.backend_params_),
-      frontend_params_(params.frontend_params_),
-      imu_params_(params.imu_params_),
+      backend_input_queue_("backend_input_queue"),
       mesher_module_(nullptr),
+      lcd_module_(nullptr),
       visualizer_module_(nullptr),
+      display_input_queue_("display_input_queue"),
       display_module_(nullptr),
+      shutdown_{false},
+      is_initialized_{false},
+      is_launched_{false},
+      is_backend_ok_{true},
       shutdown_pipeline_cb_(nullptr),
       frontend_thread_(nullptr),
       backend_thread_(nullptr),
       mesher_thread_(nullptr),
       lcd_thread_(nullptr),
-      visualizer_thread_(nullptr),
-      parallel_run_(params.parallel_run_),
-      stereo_frontend_input_queue_("stereo_frontend_input_queue"),
-      initialization_frontend_output_queue_(
-          "initialization_frontend_output_queue", false),
-      backend_input_queue_("backend_input_queue"),
-      display_input_queue_("display_input_queue") {
+      visualizer_thread_(nullptr) {
   if (FLAGS_deterministic_random_number_generator) setDeterministicPipeline();
 
   //! Create Stereo Camera
@@ -373,11 +377,6 @@ bool Pipeline::shutdownWhenFinished(const int& sleep_time_ms) {
   // Check every 0.5 seconds if all queues are empty.
   // Time to sleep between queries to the queues [in milliseconds].
   LOG(INFO) << "Shutting down VIO pipeline once processing has finished.";
-
-  bool lcd_and_lcd_input_finished = true;
-  if (lcd_module_) {
-    lcd_and_lcd_input_finished = false;
-  }
 
   CHECK(data_provider_module_);
   CHECK(vio_frontend_module_);

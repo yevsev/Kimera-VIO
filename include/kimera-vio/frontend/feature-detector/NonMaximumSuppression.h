@@ -36,7 +36,7 @@ class NonMaximumSuppression {
  public:
   virtual std::vector<cv::KeyPoint> suppressNonMax(
       const std::vector<cv::KeyPoint>& keyPoints,
-      const int& numRetPoints,
+      const size_t& numRetPoints,
       const float& tolerance,
       const int& cols,
       const int& rows) = 0;
@@ -72,7 +72,7 @@ class AdaptiveNonMaximumSuppression : public NonMaximumSuppression {
  public:
   std::vector<cv::KeyPoint> suppressNonMax(
       const std::vector<cv::KeyPoint>& keyPoints,
-      const int& numRetPoints,
+      const size_t& numRetPoints,
       const float& tolerance,
       const int& cols,
       const int& rows) override;

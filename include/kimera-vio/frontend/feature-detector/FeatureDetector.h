@@ -41,7 +41,7 @@ class FeatureDetector {
   // Returns landmark_count (updated from the new keypoints),
   // and nr or extracted corners.
   KeypointsCV featureDetection(const Frame& cur_frame,
-                               const int& need_n_corners);
+                               const size_t& need_n_corners);
 
   // Parameters.
   const FeatureDetectorParams feature_detector_params_;

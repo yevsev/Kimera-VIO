@@ -42,7 +42,7 @@ struct SubPixelCornerFinderParams : public PipelineParams {
   /// Termination criteria defined in terms of change in error and maximum
   /// number of iterations
   cv::TermCriteria term_criteria_ =
-      cv::TermCriteria(CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 10, 0.01);
+      cv::TermCriteria(cv::TermCriteria::EPS + cv::TermCriteria::MAX_ITER, 10, 0.01);
   cv::Size window_size_ = cv::Size(10, 10);
   cv::Size zero_zone_ = cv::Size(-1, -1);
 };
@@ -69,7 +69,7 @@ struct FeatureDetectorParams : public PipelineParams {
  public:
   FeatureDetectorType feature_detector_type_ = FeatureDetectorType::GFTT;
   //! Maximum amount of features to be detected per frame.
-  int max_features_per_frame_ = 400;
+  size_t max_features_per_frame_ = 400;
   //! Whether to enable subpixel feature detection.
   bool enable_subpixel_corner_refinement_ = true;
   //! Parameters for subpixel refinement in case it is enabled.

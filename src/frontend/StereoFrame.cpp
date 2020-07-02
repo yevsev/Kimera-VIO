@@ -786,7 +786,7 @@ void StereoFrame::getRightKeypointsLKunrectified() {
 
   cur_frame.keypoints_.clear();
   int nrValidDepths = 0;
-  for (int i = 0; i < px_ref.size(); i++) // fill in right frame
+  for (size_t i = 0; i < px_ref.size(); i++) // fill in right frame
   {
     cur_frame.keypoints_.push_back(px_cur[i]);
 
@@ -991,7 +991,7 @@ StatusKeypointsCV StereoFrame::getRightKeypointsRectifiedRGBD(
     const double &baseline, const double &depth_map_factor,
     const double &min_depth) const {
   int verbosity = 0;
-  bool writeImageLeftRightMatching = false;
+//  bool writeImageLeftRightMatching = false;
 
   StatusKeypointsCV right_keypoints_rectified;
   right_keypoints_rectified.reserve(left_keypoints_rectified.size());
@@ -1083,8 +1083,8 @@ std::pair<StatusKeypointCV, double> StereoFrame::findMatchingKeypointRectified(
     const int stripe_cols, const int stripe_rows, const double tol_corr,
     const bool debugStereoMatching) const {
   /// correlation matrix
-  int result_cols = stripe_cols - templ_cols + 1;
-  int result_rows = stripe_rows - templ_rows + 1;
+//  int result_cols = stripe_cols - templ_cols + 1;
+//  int result_rows = stripe_rows - templ_rows + 1;
   cv::Mat result;
   // result.create( result_rows, result_cols, CV_32FC1 );
 

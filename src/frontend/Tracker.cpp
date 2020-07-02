@@ -35,8 +35,8 @@ namespace VIO {
 Tracker::Tracker(const FrontendParams& tracker_params,
                  const CameraParams& camera_params,
                  DisplayQueue* display_queue)
-    : landmark_count_(0),
-      tracker_params_(tracker_params),
+    : tracker_params_(tracker_params),
+      landmark_count_(0),
       camera_params_(camera_params),
       // Only for debugging and visualization:
       optical_flow_predictor_(nullptr),
@@ -147,7 +147,8 @@ void Tracker::featureTracking(Frame* ref_frame,
     const LandmarkId& lmk_id = ref_frame->landmarks_[idx_valid_lmk];
 
     // if we tracked keypoint and feature track is not too long
-    if (!status[i] || lmk_age > tracker_params_.maxFeatureAge_) {
+    CHECK(tracker_params_.maxFeatureAge_ > -1);
+    if (!status[i] || lmk_age > static_cast<size_t>(tracker_params_.maxFeatureAge_)) {
       // we are marking this bad in the ref_frame since features
       // in the ref frame guide feature detection later on
       ref_frame->landmarks_[idx_valid_lmk] = -1;
@@ -237,7 +238,8 @@ std::pair<TrackingStatus, gtsam::Pose3> Tracker::geometricOutlierRejectionMono(
 
   // Check quality of tracking.
   TrackingStatus status = TrackingStatus::VALID;
-  if (mono_ransac_.inliers_.size() < tracker_params_.minNrMonoInliers_) {
+  CHECK(tracker_params_.minNrMonoInliers_ > -1);
+  if (mono_ransac_.inliers_.size() < static_cast<size_t>(tracker_params_.minNrMonoInliers_)) {
     VLOG(10) << "FEW_MATCHES: " << mono_ransac_.inliers_.size();
     status = TrackingStatus::FEW_MATCHES;
   }
@@ -325,8 +327,9 @@ Tracker::geometricOutlierRejectionMonoGivenRotation(Frame* ref_frame,
   // TODO(Toni):
   // CHECK QUALITY OF TRACKING
   TrackingStatus status = TrackingStatus::VALID;
+    CHECK(tracker_params_.minNrMonoInliers_ > -1);
   if (mono_ransac_given_rot_.inliers_.size() <
-      tracker_params_.minNrMonoInliers_) {
+          static_cast<size_t>(tracker_params_.minNrMonoInliers_)) {
     VLOG(10) << "FEW_MATCHES: " << mono_ransac_given_rot_.inliers_.size();
     status = TrackingStatus::FEW_MATCHES;
   }
@@ -601,7 +604,8 @@ Tracker::geometricOutlierRejectionStereoGivenRotation(
 
   // Check quality of tracking.
   TrackingStatus status = TrackingStatus::VALID;
-  if (inliers.size() < tracker_params_.minNrStereoInliers_) {
+  CHECK(tracker_params_.minNrStereoInliers_ > -1);
+  if (inliers.size() < static_cast<size_t>(tracker_params_.minNrStereoInliers_)) {
     VLOG(10) << "FEW_MATCHES: " << inliers.size();
     status = TrackingStatus::FEW_MATCHES;
   }
@@ -692,7 +696,8 @@ Tracker::geometricOutlierRejectionStereo(StereoFrame& ref_stereoFrame,
 
   // Check quality of tracking.
   TrackingStatus status = TrackingStatus::VALID;
-  if (stereo_ransac_.inliers_.size() < tracker_params_.minNrStereoInliers_) {
+  CHECK(tracker_params_.minNrStereoInliers_ > -1);
+  if (stereo_ransac_.inliers_.size() < static_cast<size_t>(tracker_params_.minNrStereoInliers_)) {
     VLOG(10) << "FEW_MATCHES: " << stereo_ransac_.inliers_.size();
     status = TrackingStatus::FEW_MATCHES;
   }

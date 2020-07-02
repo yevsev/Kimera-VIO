@@ -29,8 +29,8 @@ DataProviderModule::DataProviderModule(
       imu_data_(),
       left_frame_queue_("data_provider_left_frame_queue"),
       right_frame_queue_("data_provider_right_frame_queue"),
-      stereo_matching_params_(stereo_matching_params),
-      timestamp_last_frame_(kNoFrameYet) {}
+      timestamp_last_frame_(kNoFrameYet),
+      stereo_matching_params_(stereo_matching_params) {}
 
 DataProviderModule::InputUniquePtr DataProviderModule::getInputPacket() {
   // Look for a left frame inside the queue.

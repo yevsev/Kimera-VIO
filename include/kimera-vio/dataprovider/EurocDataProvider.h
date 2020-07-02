@@ -174,8 +174,6 @@ class EurocDataProvider : public DataProviderInterface {
   void clipFinalFrame();
 
  private:
-  VioParams pipeline_params_;
-
   /// Images data.
   // TODO(Toni): remove camera_names_ and camera_image_lists_...
   // This matches the names of the folders in the dataset
@@ -190,6 +188,7 @@ class EurocDataProvider : public DataProviderInterface {
   FrameId current_k_;
   FrameId initial_k_;  // start frame
   FrameId final_k_;    // end frame
+  VioParams pipeline_params_;
 
   //! Flag to signal when the dataset has been parsed.
   bool dataset_parsed_ = false;

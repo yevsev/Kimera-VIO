@@ -50,7 +50,7 @@ LoopClosureDetectorParams::LoopClosureDetectorParams(
     bool use_mono_rot,
 
     double lowe_ratio,
-    int matcher_type,
+    cv::DescriptorMatcher::MatcherType matcher_type,
 
     int nfeatures,
     float scale_factor,
@@ -58,7 +58,7 @@ LoopClosureDetectorParams::LoopClosureDetectorParams(
     int edge_threshold,
     int first_level,
     int WTA_K,
-    int score_type,
+    cv::ORB::ScoreType score_type,
     int patch_sze,
     int fast_threshold,
 
